@@ -26,12 +26,12 @@ def theLoop():
         #print("opening file")
         data = json.loads(f.read())
         
-        data["serverhost1"]["Connect Check"]["info"]["status"] = r
+        data["serverhost1"]["Payments"]["info"]["status"] = r
         f.close()
         #print("done")
 
         #print("writing file")
-        with open("./resource/serverhost1.json", 'w') as fp:
+        with open("./resource/NL.json", 'w') as fp:
             json.dump(data, fp)
             fp.close
         #print("done")
