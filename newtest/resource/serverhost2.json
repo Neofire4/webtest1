@@ -1,0 +1,22 @@
+{
+    "serverhost2": {
+      "module1": {
+        "name": "HealthCheck",
+        "info": {
+          "status": "SUCCESS",
+          "isnew": "1"
+        },
+        "body": "This is the expanded info section",
+        "time": "2024-04-04T23:09:14.018Z"
+      },
+      "module2": {
+        "name": "Run CHeck",
+        "info": {
+          "status": "SUCCESS",
+          "isnew": "1"
+        },
+        "body": "This is the expanded info section",
+        "time": "2024-04-04T23:09:14.018Z"
+      }
+    }
+  }
