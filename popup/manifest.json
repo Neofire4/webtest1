@@ -1,0 +1,19 @@
+{
+    "name": "Event Helper",
+    "version": "1.0.0",
+    "description": "Extracts data from the parent page",
+    "manifest_version": 3,
+    "permissions": ["activeTab"],
+    "action": {
+      "default_popup": "popup.html",
+      "default_title": "Event Helper"
+    },
+    "content_scripts": [
+        {
+          "matches": ["http://127.0.0.1:8082/"],
+          "js": ["content.js"],
+          "css":["content.css"]
+        }
+      ]
+  }
+  
