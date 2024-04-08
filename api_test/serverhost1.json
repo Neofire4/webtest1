@@ -1,0 +1,108 @@
+{
+  "serverhost1": {
+    "IP Check": {
+      "info": {
+        "status": "SUCCESS",
+        "isnew": 0
+
+      },
+      "body": "This is the expanded info section",
+      "time": "2024-04-04T23:09:14.018Z"
+    },
+    "Flow Check": {
+      "info": {
+        "status": "SUCCESS",
+        "isnew": 0
+      },
+      "body": "This is the expanded info section",
+      "time": "2024-04-04T23:09:14.018Z"
+    },
+    "Messaging": {
+      "info": {
+        "status": "SUCCESS",
+        "isnew": 0
+      },
+      "body": "This is the expanded info section",
+      "time": "2024-04-04T23:09:14.018Z"
+    },
+    "Ping": {
+      "info": {
+        "status": "SUCCESS",
+        "isnew": 0  
+      },
+      "body": "This is the expanded info section",
+      "time": "2024-04-04T23:09:14.018Z"
+    }
+
+  },
+  "serverhost32": {
+    "IP Check": {
+      "info": {
+        "status": "SUCCESS",
+        "isnew": 0
+      },
+      "body": "This is the expanded info section",
+      "time": "2024-04-04T23:09:14.018Z"
+    },
+    "Flow Check": {
+      "info": {
+        "status": "SUCCESS",
+        "isnew": 1
+      },
+      "body": "This is the expanded info section \n\n\n can contain lots of stuff =============== STATUS ==========",
+      "time": "2024-04-04T23:09:14.018Z"
+    },
+    "Messaging": {
+      "info": {
+        "status": "SUCCESS",
+        "isnew": 0
+      },
+      "body": "This is the expanded info section",
+      "time": "2024-04-04T23:09:14.018Z"
+    },
+    "Ping": {
+      "info": {
+        "status": "SUCCESS",
+        "isnew": 0 
+      },
+      "body": "This is the expanded info section",
+      "time": "2024-04-04T23:09:14.018Z"
+    }
+
+  },
+  "serverhost3": {
+    "IP Check": {
+      "info": {
+        "status": "SUCCESS",
+        "isnew": 0
+      },
+      "body": "This is the expanded info section",
+      "time": "2024-04-04T23:09:14.018Z"
+    },
+    "Flow Check": {
+      "info": {
+        "status": "SUCCESS",
+        "isnew": 0
+      },
+      "body": "This is the expanded info section",
+      "time": "2024-04-04T23:09:14.018Z"
+    },
+    "Messaging": {
+      "info": {
+        "status": "SUCCESS",
+        "isnew": 0
+      },
+      "body": "This is the expanded info section",
+      "time": "2024-04-04T23:09:14.018Z"
+    },
+    "Ping": {
+      "info": {
+        "status": "SUCCESS",
+        "isnew": 0 
+      },
+      "body": "This is the expanded info section",
+      "time": "2024-04-04T23:09:14.018Z"
+    }
+
+  }
+}
