@@ -1,5 +1,7 @@
 "use strict";
 
+var intervalID;
+
 /*setInterval(() => {
     loop();
 },5000) ;*/
@@ -10,15 +12,18 @@ function kickOff() {
 
     const interval = 5000;
     const launcher = document.createElement("button");
+    const holderNode = document.createElement("holder"); holderNode.style.display = "none";
     let counter = document.createElement("counter");
-    counter.innerHTML = "0";
+    
+    counter.innerHTML = "1";
 
     launcher.innerText = "Click Me";
     document.body.appendChild(launcher);
+    
 
     launcher.addEventListener("click", () => {
         
-        let x = ""; 
+        let x = document.querySelector("#alertsview"); 
         const pw = window.open(window.origin + "/myext", "_blank", "popup");
 
         pw.onload = (event) => {
@@ -28,14 +33,15 @@ function kickOff() {
             x = pw.document.querySelector("#alertsview");
             pw.document.querySelector(".meter").innerHTML = `<span id='p' style='animation: expandWidth ${interval}ms linear infinite;''></span>`;
             pw.document.querySelector(".container").appendChild(counter);
+            pw.document.body.appendChild(holderNode);
         }
 
         
     
         //pw.document.title = "My Extension Helper";
        
-        setInterval(() => {
-            loop(x,pw,Number(counter.innerHTML));
+        intervalID = setInterval(() => {
+            loop(x,pw,Number(counter.innerHTML),holderNode);
             pw.document.querySelector("#p").style.display = "block";
         },interval) ;
     
@@ -46,16 +52,19 @@ function kickOff() {
 
 }
 
-async function loop(alertholder="", rootWindow="",count=1) {
+async function loop(alertholder="", rootWindow="",count=1,holder) {
+
+    if(rootWindow.closed) {
+        clearInterval(intervalID);
+    }
 
     const url = "serverhost1.json";
+
     let alert = document.createElement("div"); //alert element holds the timestamp, host status, and event count.
     let d = new Date(); //alert timestamp, not the module actual timestamp
     let newAlert = false;
 
-
     d = formatTime(d);
-
 
 
     //Alert timestamp
@@ -63,7 +72,7 @@ async function loop(alertholder="", rootWindow="",count=1) {
 
     alert.setAttribute("class", "alertline");
 
-    //fetch handling
+
     const fetched = await fetchData(url).then(response => response.json())
     .then(data => {
         return data;
@@ -72,7 +81,7 @@ async function loop(alertholder="", rootWindow="",count=1) {
     console.error('Error fetching data:', error);
     }); 
 
-
+    console.log(fetched);
 
     //check if fetch is empty
     if (fetched === "") {
@@ -81,104 +90,68 @@ async function loop(alertholder="", rootWindow="",count=1) {
         //for each module in the host fetched data, creates a alert entry for the host
         Object.keys(fetched).forEach((host) => {
             
+            let alertStatus = document.createElement("div"); alertStatus.setAttribute("class", "alert");
+            let divstr = "";
+
             
-            let divstr = ""; // inner html for alertStatus
-            let alertStatus = document.createElement("div"); //the element for holding the module and it's status
-            let overallisnew = false; // controls new alert effects
-            //overallStatus determines the host alert overall color, if 1 module is successful, and 1 is red, overall will be red.
-            //default is 0, which is successful, 1 is unsuccessful
-            let overallStatus = 0;
 
-            alertStatus.setAttribute("class", "alert");
-            alertStatus.setAttribute("isnew", overallisnew);
 
-            //creates the hostname element inside the alertStatus element
             divstr = `<div class=host>${host}:&nbsp;</div>`;
 
-            //process the module status
-            Object.keys(fetched[host]).forEach( (module) => { //module is the module name
-                let status = fetched[host][module]["status"];
-                console.log(status);
-                let hideme = false; //hides subsequent successes to not crowd the event viewer
-                let newstr = "";
-                let statstr = "";
-                //checks if the alert status is new, will have special animation when 1.
-                if (status["isnew"] == 1) {
-                    overallisnew = true;
-                    alertStatus.setAttribute("isnew", overallisnew);
-                    newAlert = true;
-                    newstr = "<label>&nbsp;&#127381;</label>";
-                }
+            if (rootWindow.document.querySelector(host) ) {
+                console.log(`${host} node does exist`)
+            } else {
+                console.log(`${host} node does not exist`)
+                holder.appendChild(document.createElement(host))
+            }
 
-                //handles module individual status
-                switch (status["content"]) {
-
-                    case "SUCCESS":
-                            if (status["isnew"] == 0) {hideme = true};
-                        alertStatus.setAttribute("overallStatus", overallStatus); 
-                        statstr = "SUCCESS";
-                        break;
-                    case "FAILURE":
-                        newAlert = true;
-                        overallStatus = 1;
-                        alertStatus.setAttribute("overallStatus", overallStatus);
-                        statstr = "FAILURE";
-
-                        //special module alert handling, makes a popup when a specified module alerts
-                        if (module === "Flow Check" && overallisnew) {
-                            let pwindow = window.open(`${host}_${module}`, "_blank", "popup,width=480,height=640")
-                            let hm = fetched[host][module];
-                            let tstyle = "body{animation: flash 2s linear infinite;}@keyframes flash{0%,100%{background-color:#dc143c}50%{background-color:#8b0000}}";
-                            pwindow.addEventListener('DOMContentLoaded', (event) => {
-                                pwindow.document.head.innerHTML = `<style>${tstyle}</style>`;
-                                pwindow.document.body.innerHTML = `<h1>${module} ALERT @ ${hm["statustime"]} GMT </h1><div>${hm["infosummary"]}</div>`;
-                                pwindow.document.title = `${module} Critical Alert - ${host}`;
-                            });
-                        }
-
-                        break;
-                    default:
-                        //newAlert = true;
-                        overallStatus = 1;
-                        alertStatus.setAttribute("overallStatus", overallStatus);
-                        statstr = "UNKNOWN";
-                        console.log("Unexpected Status");
-                        break;
+            Object.keys(fetched[host]).forEach((module) => {
+                
+                const prevElement = rootWindow.document.querySelector(host)
+                const short = fetched[host][module]["status"]
 
 
-                }
+                //if (document.querySelector(host).children.length == 0) {}
+                
 
 
-                divstr += `<div class=module hide=${hideme} isnew=${status["isnew"]} status=${statstr}>${module}${newstr}</div>`;
-                //divstr += `<div class=module hide=${hideme} isnew=${status["isnew"]} status=${status["status"]}>${module}${newstr}</div>`; //creates a module div to be appended inside alertStatus
+                divstr += `<div class=module isnew=${short["isNew"]} status=${short["content"]}>${module}</div>`;
 
-            }); 
-
-            alertStatus.innerHTML = divstr;
+                //previous status comparison
+                //switch (short["content"]) {
+                //    default:
+                if (count > 1)
+                    console.log(CompareLastStatus(short["content"],host,module.replaceAll(' ', '_'),rootWindow));
+                //}
+                //prevElement.innerHTML = "";
+                prevElement.innerHTML += `<div id=${module.replaceAll(' ', '_')}>
+                <div>${short["content"]}</div>
+                <div>${short["isNew"]}</div>
+                </div>`
+            });
             
-            //allows failing status to show during every interval check
-            if(overallisnew || overallStatus == 1)
+            alertStatus.innerHTML = divstr;   
             alert.appendChild(alertStatus);
-
-            
         });
-    
+        
+
+        alertholder.prepend(alert);
         //if there is a new alert, append it to the alert history
-        if(newAlert) {
+        /*if(newAlert) {
         alertholder.prepend(alert);
         
-        }
+        }*/
 
     }
 
     
     //increases the event counter
-    if(newAlert) {   
+   //if(newAlert) {   
         alert.setAttribute("rowcolor", count % 2);
         alert.innerHTML += `<div class=count>${count}</div>`;
         count++;
         rootWindow.document.querySelector("counter").innerHTML = count;
-    }
+    //}*/
 }
 
 //fetches the supplied data, is called by loop()
@@ -193,4 +166,50 @@ function formatTime(date="") {
     let time = date.toLocaleTimeString('en-gb', { timeZone: 'Europe/London' });
 
     return [mdy, time];
+}
+
+function statusLogic(fetched,host,overallisnew) {
+
+
+
+}
+
+//fetch functions with delay option to prevent blasting
+function fetchDataWithDelay(url, fetchdelay=100) {
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            fetch(url)
+                .then((response) => response.json())
+                .then((data) => resolve(data))
+                .catch((error) => {
+                    console.error('Error fetching data:', error);
+                    resolve(null); // Handle the error case as needed
+                });
+        }, fetchdelay); // 100ms delay
+    });
+}
+
+async function fetchAllData(fetched,urls) {
+    for (const u of urls) {
+        const result = await fetchDataWithDelay(u);
+        if (result) {
+            fetched.push(result);
+        }
+    }
+    return fetched;
+    //console.log(fetched); // Process the fetched data as required
+}
+
+//handles popuplating the holder node for comparing previous status with new one
+
+function CompareLastStatus(newstatus,ahost, amodule, parentDoc) {
+    let qstr = ahost + " > #" + amodule;
+    let oldstatus = parentDoc.document.querySelector("holder");
+    console.log(newstatus,oldstatus);
+    if (newstatus === oldstatus)
+        return true;
+    else
+        return false 
+
+
 }
