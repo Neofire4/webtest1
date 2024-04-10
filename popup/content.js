@@ -63,7 +63,7 @@ async function loop(alertholder="", rootWindow="",count=1,holder) {
     let alert = document.createElement("div"); //alert element holds the timestamp, host status, and event count.
     let d = new Date(); //alert timestamp, not the module actual timestamp
     let newAlert = false;
-
+    let histStr = "";
     d = formatTime(d);
 
 
@@ -107,7 +107,6 @@ async function loop(alertholder="", rootWindow="",count=1,holder) {
 
             Object.keys(fetched[host]).forEach((module) => {
                 
-                const prevElement = rootWindow.document.querySelector(host)
                 const short = fetched[host][module]["status"]
 
 
@@ -124,13 +123,13 @@ async function loop(alertholder="", rootWindow="",count=1,holder) {
                     console.log(CompareLastStatus(short["content"],host,module.replaceAll(' ', '_'),rootWindow));
                 //}
                 //prevElement.innerHTML = "";
-                prevElement.innerHTML += `<div id=${module.replaceAll(' ', '_')}>
-                <div>${short["content"]}</div>
-                <div>${short["isNew"]}</div>
-                </div>`
+                histStr += `<div>${module.replaceAll(' ', '_')}:${short["content"]}:${short["isNew"]}</div>`;
             });
-            
+        
+            rootWindow.document.querySelector(host).innerHTML = histStr;
+        
             alertStatus.innerHTML = divstr;   
+            
             alert.appendChild(alertStatus);
         });
         
@@ -203,6 +202,7 @@ async function fetchAllData(fetched,urls) {
 //handles popuplating the holder node for comparing previous status with new one
 
 function CompareLastStatus(newstatus,ahost, amodule, parentDoc) {
+    document.querySelector("#IP_Check")
     let qstr = ahost + " > #" + amodule;
     let oldstatus = parentDoc.document.querySelector("holder");
     console.log(newstatus,oldstatus);
