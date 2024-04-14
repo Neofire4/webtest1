@@ -1,0 +1,42 @@
+{
+    "IP Check": {
+      "name": "IP-Check",
+      "status": {
+        "content": "WARNING",
+        "isnew": 0
+      },
+      "statusinfosummary": "This is the expanded info section",
+      "statustime": "Apr 02, 02:13:39",
+      "NextRunTime": "Apr 08, 04:23:39"
+    },
+    "Message": {
+      "name": "Message",
+      "status": {
+        "content": "SUCCESS",
+        "isnew": 0
+      },
+      "statusinfosummary": "This is the expanded info section",
+      "statustime": "Apr 08, 02:13:39",
+      "NextRunTime": "Apr 08, 02:23:39"
+    },
+    "Connection": {
+      "name": "Connection Test",
+      "status": {
+        "content": "SUCCESS",
+        "isnew": 0
+      },
+      "statusinfosummary": "This is the expanded info section",
+      "statustime": "Apr 08, 04:13:39",
+      "NextRunTime": "Apr 08, 02:23:39"
+    },
+    "Flow Check": {
+      "name": "Flow Check",
+      "status": {
+        "content": "SUCCESS",
+        "isnew": 0
+      },
+      "statusinfosummary": "This is the expanded info section",
+      "statustime": "Apr 08, 02:13:39",
+      "NextRunTime": "Apr 08, 02:23:39"
+    }
+}
